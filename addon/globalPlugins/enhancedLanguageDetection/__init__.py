@@ -52,6 +52,7 @@ class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
 			else:
 				choices.append(i)
 		self.languages = settings.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices = choices)
+		self.languages.SetSelection(0)
 		checked = []
 		for i in range(len(languages)):
 			if config.conf["enhancedLanguageDetection"][languages[i]]:
