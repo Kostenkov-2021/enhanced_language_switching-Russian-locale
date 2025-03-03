@@ -20,7 +20,7 @@ That add-on stopped working, however, and from it's issues on GitHub, it doesn't
     * never interpret (NVDA's default behavior):
         Self explanatory.
 * Languages to interpret:
-    This is a list of the languages to interpret. If the add-on interprets a text as a language that isn't selected in this list, no auto language switching is done. No languages are selected by default.
+    This is a list of the languages to interpret. If the add-on interprets a text as a language that isn't selected in this list, no auto language switching is done based on the interpretation. No languages are selected by default.
 
 ## Change log.
 ### v1.0
