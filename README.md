@@ -2,7 +2,7 @@
 
 * Author: Emil-18
 * NVDA compatibility: 2024.2 and beyond
-* Download: [Stable version](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.0/enhancedLanguageDetection-1.0.nvda-addon).
+* Download: [Stable version](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.1/enhancedLanguageDetection-1.1.nvda-addon).
 
 This add-on Automaticly detects the language of the text NVDA is about to speak, and uses NVDA's built in auto language switching, if turned on, to sspeak the text in that language.
 
@@ -23,6 +23,11 @@ That add-on stopped working, however, and from it's issues on GitHub, it doesn't
     This is a list of the languages to interpret. If the add-on interprets a text as a language that isn't selected in this list, no auto language switching is done based on the interpretation. No languages are selected by default.
 
 ## Change log.
+### v1.1
+* Added compatibillity with NVDA 2025.
+* Fixed a bug that caused the add-on to play error sounds when exiting NVDA.
+* Made it so no language interpretation is performed (as it is verry slo) if the user has auto language switching turned off.
+* Russian translation has been added, thanks to Kostenkov-2021
 ### v1.0
 
 Initial release
