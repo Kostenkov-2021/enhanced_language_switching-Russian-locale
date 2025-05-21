@@ -68,7 +68,6 @@ def detectLanguage(text):
 	try:
 		languages = langdetect.detect_langs(text)
 	except:
-		languages = None
 		return
 	if not languages:
 		return
