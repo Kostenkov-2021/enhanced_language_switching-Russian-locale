@@ -22,7 +22,7 @@ languages = os.listdir(profilePath)
 confspec = {
 	"languageDetection": "integer(default=1)"
 }
-for i in os.listdir(profilePath):
+for i in languages:
 	confspec.update({i: "boolean(default=False)"})
 config.conf.spec["enhancedLanguageDetection"] = confspec
 class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
@@ -69,6 +69,7 @@ def detectLanguage(text):
 		languages = langdetect.detect_langs(text)
 	except:
 		languages = None
+		return
 	if not languages:
 		return
 	lang = None
@@ -77,7 +78,7 @@ def detectLanguage(text):
 			lang = language.lang
 			return(lang)
 def speechSequenceFilter(speechSequence, *args, **kwargs):
-	if config.conf["enhancedLanguageDetection"]["languageDetection"] == 2:
+	if config.conf["enhancedLanguageDetection"]["languageDetection"] == 2 or not config.conf["speech"]["autoLanguageSwitching"]:
 		return(speechSequence)
 	newSequence = []
 	shouldInterpret = True
@@ -96,10 +97,6 @@ def speechSequenceFilter(speechSequence, *args, **kwargs):
 				continue
 
 		newSequence.append(i)
-	try:
-		language = detectLanguage(string)
-	except:
-		language = None
 	return(newSequence)
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -108,5 +105,5 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(EnhancedLanguageDetectionSettingsPanel)
 		filter_speechSequence.register(speechSequenceFilter)
 	def terminate(self, *args, **kwargs):
-		filterSpeechSequence.unRegister(speechSequenceFilter)
+		filter_speechSequence.unRegister(speechSequenceFilter)
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove
