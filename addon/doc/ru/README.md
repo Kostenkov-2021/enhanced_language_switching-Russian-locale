@@ -1,8 +1,8 @@
-# Улучшенное обнаружение языков
+# Enhanced Language Detection (Улучшенное обнаружение языков)
 
 * Автор: Emil-18
 * Совместимость с NVDA: 2024.2 и более поздние версии
-* Скачать: [Стабильная версия](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.0/enhancedLanguageDetection-1.0.nvda-addon).
+* Скачать: [Стабильная версия](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.1/enhancedLanguageDetection-1.1.nvda-addon).
 
 Это дополнение автоматически определяет язык текста, который NVDA собирается произнести, и использует встроенное в NVDA автоматическое переключение языка, если оно включено, для произнесения текста на этом языке.
 
@@ -30,4 +30,5 @@
 * Добавлен перевод на русский язык, спасибо Kostenkov-2021
 ### Версия 1.0
 
+Первоначальный выпуск
 Первоначальный выпуск
