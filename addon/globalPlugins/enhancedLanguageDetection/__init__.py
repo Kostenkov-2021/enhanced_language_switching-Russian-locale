@@ -61,7 +61,11 @@ class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
 		self.multiple.Enable(evt.GetSelection() == 0)
 	def makeSettings(self, settingsSizer):
 		settings = gui.guiHelper.BoxSizerHelper(self, sizer = settingsSizer)
-		modelComboBoxValues = ["lingua", "langdetect"]
+		modelComboBoxValues = [
+			# Translators: An option in a combo box
+			_("lingua (recommended)"),
+			"langdetect"
+		]
 		# Translators: the label for a combo box
 		label = _("language detection library")
 		self.modelComboBox = settings.addLabeledControl(label, wx.Choice, choices = modelComboBoxValues)
@@ -203,6 +207,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		filter_speechSequence.register(speechSequenceFilter)
 		config.post_configProfileSwitch.register(updateDetector)
 	def terminate(self, *args, **kwargs):
-		config.post_configProfileSwitch.unRegister(updateDetector)
-		filter_speechSequence.unRegister(speechSequenceFilter)
+		config.post_configProfileSwitch.unregister(updateDetector)
+		filter_speechSequence.unregister(speechSequenceFilter)
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove
