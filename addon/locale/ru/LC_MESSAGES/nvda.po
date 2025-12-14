@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: enhanced_language_switching\n"
-"POT-Creation-Date: 2025-08-13 12:15+0500\n"
-"PO-Revision-Date: 2025-08-13 12:18+0500\n"
+"Project-Id-Version: enhancedLanguageDetection 1.2\n"
+"POT-Creation-Date: 2025-12-15 00:36+0300\n"
+"PO-Revision-Date: 2025-12-15 00:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: Russian translation team <nvda.ru>, Danil Kostenkov "
 "<danilkostenkov38@gmail.com>\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: addon/globalPlugins/enhancedLanguageDetection\n"
@@ -21,29 +21,41 @@ msgstr ""
 "X-Poedit-SearchPath-4: addon/globalPlugins/enhancedLanguageDetection/"
 "langdetect/utils\n"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:30 buildVars.py:23
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:57 buildVars.py:23
 msgid "Enhanced Language Detection"
 msgstr "Enhanced Language Detection (Улучшенное обнаружение языков)"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:35
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:66
+msgid "lingua (recommended)"
+msgstr "lingua (рекомендуется)"
+
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:70
+msgid "language detection library"
+msgstr "библиотека определения языка"
+
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:76
 msgid "always interpret"
 msgstr "всегда определять"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:37
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:78
 msgid "only interpret if the text doesn't instruct NVDA to change language"
 msgstr ""
 "определять только тогда, когда текст не содержит инструкций для изменения "
 "языка"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:39
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:80
 msgid "never interpret (NVDA's default behavior)"
 msgstr "никогда не определять (поведение NVDA по умолчанию)"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:42
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:83
 msgid "Language interpretation:"
 msgstr "Определять язык::"
 
-#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:46
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:87
+msgid "Detect multiple languages in the same text"
+msgstr "Определять несколько языков в одном тексте"
+
+#: addon/globalPlugins/enhancedLanguageDetection/__init__.py:92
 msgid "Languages to interpret"
 msgstr "Определяемые языки"
 
