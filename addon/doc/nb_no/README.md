@@ -2,7 +2,7 @@
 
 * Forfatter: Emil-18
 * NVDA -kompatibilitet: 2024.2 og utover
-* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.1/enhancedlanguagedetection-1.1.nvda-addon).
+* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2/enhancedlanguagedetection-1.2.nvda-addon).
 
 Dette tillegget  automatisk oppdager språket i teksten NVDA er i ferd med å si, og bruker NVDAs innebygde automatiske språk bytte hvis det er slått på, for å si teksten på det språket.
 
@@ -11,18 +11,27 @@ Det tillegget sluttet å fungere, og fra issues på GitHub, ser det ikke  ut som
 
 ## Innstillinger
 
+* språkdeteksjonsbibliotek:
+	Dette er en kombinasjonsboks som lar deg endre biblioteket tillegget bruker for språkdeteksjon. Valgene er:
+	* lingua (anbefalt)
+	* Langdetect
 * Språktolkning:
     Dette er en kombinasjonsboks som lar deg velge når tillegget tolker språket i teksten. Valgene er:
     * Tolk alltid:
-        Tillegget vil alltid tolke tekstens språk og fjerne alle tidligere instruksjoner for å endre språket. For eksempel, hvis du er på en webside, og språket på websiden er definert som engelsk, men ifølge tillegget er teksten norsk, vil den bytte til en norsk stemme. Hvis du ikke har valgt norsk som et av språkene som skal tolkes, (se nedenfor), vil ikke stemmen endre seg i det hele tatt.
+        Tillegget vil alltid tolke tekstens språk og fjerne alle tidligere instruksjoner for å endre språket. For eksempel, hvis du er på en netside, og språket på netsiden er definert som engelsk, men ifølge tillegget er teksten norsk, vil den bytte til en norsk stemme. Hvis du ikke har valgt norsk som et av språkene som skal tolkes, (se nedenfor), vil ikke stemmen endre seg i det hele tatt.
     * Bare tolke hvis teksten ikke instruerer NVDA om å endre språk:
         Tillegget vil bare tolke språket hvis det ikke er instruksjoner om å endre språket i teksten. I eksemplet over vil den bytte til en engelsk stemme.
     * Aldri tolke (NVDAs standardoppførsel):
         Selvforklarende.
+* Oppdag flere språk i samme tekst:
+	dette er en avkryssingsboks som lar deg spesifisere om tillegget skal prøve å oppdage flere språk i samme tekst bit som NVDA er i ferd med å si. For eksempel, hvis du leser et dokument linje for linje, og støter på en linje som inneholder to språk, vil den prøve å oppdage hvert språk separat.
 * Språk for å tolke:
     Dette er en liste over språkene å tolke. Hvis tillegget tolker en tekst som et språk som ikke er valgt i denne listen, gjøres ingen automatisk språk bytte basert på tolkningen. Ingen språk er valgt som standard.
 
 ## forandrings log.
+
+### v1.2
+* Lagt til støtte for lingua språkdeteksjonsbiblioteket. Dette biblioteket er mye raskere og mye mer korrekt enn langdetect, som ble brukt tidligere. I tillegg vil den alltid tolke den samme teksten på samme språk, i motsetning til langdetect. Du vil fortsatt kunne bruke langdetect hvis du trenger det av en eller annen grunn, men dette anbefales ikke
 ### v1.1
 * Lagt til kompatibillitet med NVDA 2025.
 * Fikset en feil som fikk tillegget til å spille feillyder når du avsluttet NVDA.
