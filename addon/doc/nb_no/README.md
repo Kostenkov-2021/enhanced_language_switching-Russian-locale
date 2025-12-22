@@ -2,7 +2,7 @@
 
 * Forfatter: Emil-18
 * NVDA -kompatibilitet: 2024.2 og utover
-* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2/enhancedlanguagedetection-1.2.nvda-addon).
+* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.1/enhancedlanguagedetection-1.2.1.nvda-addon).
 
 Dette tillegget  automatisk oppdager språket i teksten NVDA er i ferd med å si, og bruker NVDAs innebygde automatiske språk bytte hvis det er slått på, for å si teksten på det språket.
 
@@ -29,6 +29,11 @@ Det tillegget sluttet å fungere, og fra issues på GitHub, ser det ikke  ut som
     Dette er en liste over språkene å tolke. Hvis tillegget tolker en tekst som et språk som ikke er valgt i denne listen, gjøres ingen automatisk språk bytte basert på tolkningen. Ingen språk er valgt som standard.
 
 ## forandrings log.
+
+
+### v1.2.1
+
+* Den russiske oversettelsen har blit oppdatert, takket være Kostenkov-2021
 
 ### v1.2
 * Lagt til støtte for lingua språkdeteksjonsbiblioteket. Dette biblioteket er mye raskere og mye mer korrekt enn langdetect, som ble brukt tidligere. I tillegg vil den alltid tolke den samme teksten på samme språk, i motsetning til langdetect. Du vil fortsatt kunne bruke langdetect hvis du trenger det av en eller annen grunn, men dette anbefales ikke
