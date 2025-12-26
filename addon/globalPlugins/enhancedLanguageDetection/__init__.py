@@ -33,13 +33,13 @@ detector = None
 confspec = {
 	"languageDetection": "integer(default=1)",
 	"model": "integer(default=0)",
-	"detectMultipleLanguages": "boolean(default=False)"
+	"detectMultipleLanguages": "boolean(default=True)"
 }
 
 for i in languages:
 	confspec.update({i: "boolean(default=False)"})
 for i in lingua.Language:
-	confspec.update({"lingua_"+i.iso_code_639_1.name: "boolean(default=True)"})
+	confspec.update({"lingua_"+i.iso_code_639_1.name: "boolean(default=False)"})
 config.conf.spec["enhancedLanguageDetection"] = confspec
 def updateDetector():
 	global detector
