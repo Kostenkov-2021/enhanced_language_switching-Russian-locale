@@ -33,7 +33,7 @@ detector = None
 confspec = {
 	"languageDetection": "integer(default=1)",
 	"model": "integer(default=0)",
-	"detectMultipleLanguages": "boolean(default=True)"
+	"detectMultipleLanguages": "boolean(default=False)"
 }
 
 for i in languages:
