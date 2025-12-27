@@ -146,10 +146,10 @@ def detectLanguage(text):
 			return(lang)
 def detectLanguageWithLingua(text):
 	lang = None
-	#try:
-	lang = detector.detect_language_of(text)
-	#except:
-		#return
+	try:
+		lang = detector.detect_language_of(text)
+	except:
+		return
 	if not lang:
 		return
 	return(lang.iso_code_639_1.name)
@@ -157,7 +157,7 @@ def detectLanguageWithLingua(text):
 def detectMultipleLanguages(text):
 	sequence = []
 	if not detector:
-		return([])
+		return([text])
 	detected = detector.detect_multiple_languages_of(text)
 	if not detected:
 		return([text])
