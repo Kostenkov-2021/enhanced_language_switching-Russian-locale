@@ -2,7 +2,7 @@
 
 * Forfatter: Emil-18
 * NVDA -kompatibilitet: 2024.2 og utover
-* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.2/enhancedLanguageDetection-1.2.2.nvda-addon).
+* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.3/enhancedLanguageDetection-1.2.3.nvda-addon).
 
 Dette tillegget  automatisk oppdager språket i teksten NVDA er i ferd med å si, og bruker NVDAs innebygde automatiske språk bytte hvis det er slått på, for å si teksten på det språket.
 
@@ -30,6 +30,8 @@ Det tillegget sluttet å fungere, og fra issues på GitHub, ser det ikke  ut som
 
 ## forandrings log.
 
+### v1.2.3
+* Fikset en feil som førte til at talen stoppet eller at NVDA spilte av feilmeldingslyder når ingen språk er valgt
 ### v1.2.2
 
 * Rettet en feil som førte til at alle språk støttet av lingua ble avkrysset som standard
