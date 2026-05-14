@@ -25,10 +25,20 @@ That add-on stopped working, however, and from it's issues on GitHub, it doesn't
         Self explanatory.
 * Detect multiple languages in the same text:
 	this is a check box that allows you to specify if the add-on should try to detect multiple languages in the same text chunk that NVDA is about to speak. For example, if you are reading a document line by line, and encounter a line containing two languages, it will try to detect each language Separately.
+* Minimum number of words required to switch language:
+    Short tokens (single characters, symbol names) are too small to identify reliably and switching voice mid-utterance for one or two words is audibly disruptive. This setting controls the minimum word count before a language switch is applied. The default of 3 prevents single-word fragments from triggering a switch; values from 1 to 50 are accepted.
 * Languages to interpret:
     This is a list of the languages to interpret. If the add-on interprets a text as a language that isn't selected in this list, no auto language switching is done based on the interpretation. No languages are selected by default.
 
 ## Change log.
+
+### v2.0.0
+
+* Upgraded the bundled lingua library to v2 (Rust-backed bindings — much faster and more accurate than the v1 pure-Python implementation, but increases the .nvda-addon size to ~170 MB).
+* Added a "Minimum number of words required to switch language" setting (default 3) so short tokens don't flicker the voice mid-sentence.
+* Letter-by-letter navigation through non-English text now respects the upstream language (e.g. German symbol names like "Punkt") even in always-interpret mode.
+* Marked compatible with NVDA 2026.1 (Python 3.13, 64-bit).
+* Vendored `six.py` so the bundled `langdetect` keeps working under NVDA 2026.1, which no longer ships `six`.
 
 ### v1.2.3
 
