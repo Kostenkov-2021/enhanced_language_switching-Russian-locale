@@ -23,9 +23,9 @@ addon_info = {
 	"addon_summary": _("Enhanced Language Detection"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _("""Automaticly detects the language of the text NVDA is about to speak, and uses NVDA's built in auto language switching, if turned on, to speak the text in that language"""),
+	"addon_description": _("""Automaticly detects the language of the text NVDA is about to speak, and uses NVDA's built in auto language switching, if turned on, to sspeak the text in that language"""),
 	# version
-	"addon_version": "1.2.4",
+	"addon_version": "1.3.4",
 	# Author(s)
 	"addon_author": "Emil-18<emilhesmyr@icloud.com>",
 	# URL for the add-on documentation support

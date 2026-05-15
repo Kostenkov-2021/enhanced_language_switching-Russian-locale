@@ -8,6 +8,7 @@ addonHandler.initTranslation()
 import os
 import sys
 
+<<<<<<< HEAD
 # Lingua can't be imported with relative import, because it requires submodules that I had to include manualy in the lingua folder
 # so add both the add-on folder as well as the underlying lingua folder, to os.path, import lingua, and remove them again
 addonPath = os.path.dirname(__file__)
@@ -29,8 +30,6 @@ from logHandler import log
 from speech.commands import LangChangeCommand
 from speech.extensions import filter_speechSequence
 from . import langdetect
-#from . import lingua
-
 profilePath = os.path.join(os.path.dirname(__file__), "langdetect", "profiles")
 languages = os.listdir(profilePath)
 detector = None
