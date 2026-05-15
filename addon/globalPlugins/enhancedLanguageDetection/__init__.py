@@ -5,18 +5,9 @@
 
 import addonHandler
 addonHandler.initTranslation()
-import config
-import globalPluginHandler
-import gui
-import languageHandler
 import os
-import speech
 import sys
-import wx
-from scriptHandler import script
-from speech.commands import LangChangeCommand
-from speech.extensions import filter_speechSequence
-from . import langdetect
+
 # Lingua can't be imported with relative import, because it requires submodules that I had to include manualy in the lingua folder
 # so add both the add-on folder as well as the underlying lingua folder, to os.path, import lingua, and remove them again
 addonPath = os.path.dirname(__file__)
@@ -24,51 +15,85 @@ linguaPath = os.path.join(os.path.dirname(__file__), "lingua")
 sys.path.append(addonPath)
 sys.path.append(linguaPath)
 import lingua
-sys.path.remove(linguaPath)
-sys.path.remove(addonPath)
+from lingua import lingua
+#sys.path.remove(linguaPath)
+#sys.path.remove(addonPath)
+
+import config
+import globalPluginHandler
+import gui
+from gui.settingsDialogs import SettingsPanel
+import languageHandler
+import wx
+from logHandler import log
+from speech.commands import LangChangeCommand
+from speech.extensions import filter_speechSequence
+from . import langdetect
+#from . import lingua
+
 profilePath = os.path.join(os.path.dirname(__file__), "langdetect", "profiles")
 languages = os.listdir(profilePath)
 detector = None
 
+# Lingua v2 exposes Language as a PyO3 type, not a stdlib Enum, so it's not directly iterable.
+# Use Language.all() and sort by name for a stable order across runs (config keys, UI indices).
+LINGUA_LANGUAGES = sorted(lingua.Language.all(), key=lambda l: l.name)
+
 confspec = {
 	"languageDetection": "integer(default=1)",
 	"model": "integer(default=0)",
-	"detectMultipleLanguages": "boolean(default=True)"
+	"detectMultipleLanguages": "boolean(default=True)",
+	"minWordsForLanguageChange": "integer(default=3, min=1, max=50)",
 }
 
 for i in languages:
 	confspec.update({i: "boolean(default=False)"})
-for i in lingua.Language:
-	confspec.update({"lingua_"+i.iso_code_639_1.name: "boolean(default=False)"})
+for i in LINGUA_LANGUAGES:
+	confspec.update({"lingua_" + i.iso_code_639_1.name: "boolean(default=False)"})
 config.conf.spec["enhancedLanguageDetection"] = confspec
-def updateDetector():
-	global detector
-	languages = []
-	for i in lingua.Language:
-		if not config.conf["enhancedLanguageDetection"]["lingua_"+i.iso_code_639_1.name]:
-			continue
-		languages.append(i)
-	if languages:
-		detector = lingua.LanguageDetectorBuilder(languages).build()
-	return detector if languages else None
 
-class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
+
+def updateDetector():
+	"""Rebuild the lingua detector from the user's language selections.
+
+	Lingua v2 requires at least two languages and uses varargs constructors.
+	"""
+	global detector
+	selected = []
+	for i in LINGUA_LANGUAGES:
+		if config.conf["enhancedLanguageDetection"]["lingua_" + i.iso_code_639_1.name]:
+			selected.append(i)
+	if len(selected) >= 2:
+		try:
+			detector = lingua.LanguageDetectorBuilder.from_languages(*selected).build()
+		except Exception as e:
+			log.error(f"enhancedLanguageDetection: failed to build lingua detector: {e}")
+			detector = None
+	else:
+		# Lingua v2 needs >=2 languages; with 0 or 1, leave detection disabled.
+		detector = None
+	return detector
+
+
+class EnhancedLanguageDetectionSettingsPanel(SettingsPanel):
 	# Translators: The title for the settings panel
 	title = _("Enhanced Language Detection")
+
 	def handleModelChange(self, evt):
 		self.linguaLanguages.Enable(evt.GetSelection() == 0)
 		self.languages.Enable(evt.GetSelection())
 		self.multiple.Enable(evt.GetSelection() == 0)
+
 	def makeSettings(self, settingsSizer):
-		settings = gui.guiHelper.BoxSizerHelper(self, sizer = settingsSizer)
+		settings = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		modelComboBoxValues = [
 			# Translators: An option in a combo box
 			_("lingua (recommended)"),
-			"langdetect"
+			"langdetect",
 		]
 		# Translators: the label for a combo box
 		label = _("language detection library")
-		self.modelComboBox = settings.addLabeledControl(label, wx.Choice, choices = modelComboBoxValues)
+		self.modelComboBox = settings.addLabeledControl(label, wx.Choice, choices=modelComboBoxValues)
 		self.modelComboBox.SetSelection(config.conf["enhancedLanguageDetection"]["model"])
 		self.modelComboBox.Bind(wx.EVT_CHOICE, self.handleModelChange)
 		comboBoxValues = [
@@ -77,17 +102,26 @@ class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
 			# Translators: An option in a combo box
 			_("only interpret if the text doesn't instruct NVDA to change language"),
 			# Translators: An option in a combo box
-			_("never interpret (NVDA's default behavior)")
+			_("never interpret (NVDA's default behavior)"),
 		]
 		# Translators: The label for a combo box
 		label = _("Language interpretation:")
-		self.languageDetection = settings.addLabeledControl(label, wx.Choice, choices = comboBoxValues)
+		self.languageDetection = settings.addLabeledControl(label, wx.Choice, choices=comboBoxValues)
 		self.languageDetection.SetSelection(config.conf["enhancedLanguageDetection"]["languageDetection"])
-		# Translators: The label for a c check box
+		# Translators: The label for a check box
 		label = _("Detect multiple languages in the same text")
-		self.multiple = settings.addItem(wx.CheckBox(self, label = label))
+		self.multiple = settings.addItem(wx.CheckBox(self, label=label))
 		self.multiple.SetValue(config.conf["enhancedLanguageDetection"]["detectMultipleLanguages"])
 		self.multiple.Enable(config.conf["enhancedLanguageDetection"]["model"] == 0)
+		# Translators: The label for a numeric input controlling the minimum number of words before a language switch is applied.
+		label = _("Minimum number of words required to switch language")
+		self.minWords = settings.addLabeledControl(
+			label,
+			wx.SpinCtrl,
+			min=1,
+			max=50,
+			initial=config.conf["enhancedLanguageDetection"]["minWordsForLanguageChange"],
+		)
 		# Translators: The label for a checkable list box
 		label = _("Languages to interpret")
 		choices = []
@@ -97,116 +131,145 @@ class EnhancedLanguageDetectionSettingsPanel(gui.SettingsPanel):
 				choices.append(description)
 			else:
 				choices.append(i)
-		self.languages = settings.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices = choices)
+		self.languages = settings.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=choices)
 		self.languages.SetSelection(0)
-		choices = []
 		checked = []
 		for i in range(len(languages)):
 			if config.conf["enhancedLanguageDetection"][languages[i]]:
 				checked.append(i)
 		self.languages.SetCheckedItems(checked)
-		for i in lingua.Language:
+		choices = []
+		for i in LINGUA_LANGUAGES:
 			description = languageHandler.getLanguageDescription(i.iso_code_639_1.name)
 			if description:
 				choices.append(description)
 			else:
 				choices.append(i.iso_code_639_1.name)
-		self.linguaLanguages = settings.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices = choices)
-		self.languages.SetSelection(0)
+		self.linguaLanguages = settings.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=choices)
+		self.linguaLanguages.SetSelection(0)
 		checked = []
-		for i in enumerate(lingua.Language):
-			if config.conf["enhancedLanguageDetection"]["lingua_"+i[1].iso_code_639_1.name]:
-				checked.append(i[0])
+		for idx, lang in enumerate(LINGUA_LANGUAGES):
+			if config.conf["enhancedLanguageDetection"]["lingua_" + lang.iso_code_639_1.name]:
+				checked.append(idx)
 		self.linguaLanguages.SetCheckedItems(checked)
 		self.languages.Enable(config.conf["enhancedLanguageDetection"]["model"])
 		self.linguaLanguages.Enable(config.conf["enhancedLanguageDetection"]["model"] == 0)
+
 	def onSave(self):
 		config.conf["enhancedLanguageDetection"]["languageDetection"] = self.languageDetection.GetSelection()
 		config.conf["enhancedLanguageDetection"]["model"] = self.modelComboBox.GetSelection()
 		config.conf["enhancedLanguageDetection"]["detectMultipleLanguages"] = self.multiple.GetValue()
+		config.conf["enhancedLanguageDetection"]["minWordsForLanguageChange"] = self.minWords.GetValue()
 		checked = self.languages.GetCheckedItems()
 		for i in range(len(languages)):
 			config.conf["enhancedLanguageDetection"][languages[i]] = i in checked
 		checked = self.linguaLanguages.GetCheckedItems()
-		for i in enumerate(lingua.Language):
-			config.conf["enhancedLanguageDetection"]["lingua_"+i[1].iso_code_639_1.name] = i[0] in checked
+		for idx, lang in enumerate(LINGUA_LANGUAGES):
+			config.conf["enhancedLanguageDetection"]["lingua_" + lang.iso_code_639_1.name] = idx in checked
 		updateDetector()
-allowedLanguages = ["no", "en"]
+
+
 def detectLanguage(text):
 	try:
-		languages = langdetect.detect_langs(text)
-	except:
+		langs = langdetect.detect_langs(text)
+	except Exception:
 		return
-	if not languages:
+	if not langs:
 		return
-	lang = None
-	for language in languages:
+	for language in langs:
 		if config.conf["enhancedLanguageDetection"][language.lang]:
-			lang = language.lang
-			return(lang)
+			return language.lang
+
+
 def detectLanguageWithLingua(text):
-	lang = None
+	if detector is None:
+		return
 	try:
 		lang = detector.detect_language_of(text)
-	except:
+	except Exception:
 		return
 	if not lang:
 		return
-	return(lang.iso_code_639_1.name)
+	return lang.iso_code_639_1.name
 
-def detectMultipleLanguages(text):
-	sequence = []
-	if not detector:
-		return([text])
-	detected = detector.detect_multiple_languages_of(text)
+
+def detectMultipleLanguages(text, minWords):
+	"""Split text into per-language segments, suppressing language changes for runs shorter than minWords."""
+	if detector is None:
+		return [text]
+	try:
+		detected = detector.detect_multiple_languages_of(text)
+	except Exception:
+		return [text]
 	if not detected:
-		return([text])
-	for i in detected:
-		newString = ""
-		for j in range(i.start_index, i.end_index):
-			newString += text[j]
-		command = LangChangeCommand(i.language.iso_code_639_1.name.lower())
-		sequence.append(command)
-		sequence.append(newString)
-	return(sequence)
+		return [text]
+	sequence = []
+	for result in detected:
+		segment = text[result.start_index:result.end_index]
+		# Lingua v2 exposes word_count on each DetectionResult; if a segment is too short,
+		# don't emit a language change — let it inherit the surrounding voice.
+		if getattr(result, "word_count", 0) >= minWords:
+			sequence.append(LangChangeCommand(result.language.iso_code_639_1.name.lower()))
+		sequence.append(segment)
+	return sequence
+
 
 def speechSequenceFilter(speechSequence, *args, **kwargs):
-	if config.conf["enhancedLanguageDetection"]["languageDetection"] == 2 or not config.conf["speech"]["autoLanguageSwitching"]:
-		return(speechSequence)
+	conf = config.conf["enhancedLanguageDetection"]
+	if conf["languageDetection"] == 2 or not config.conf["speech"]["autoLanguageSwitching"]:
+		return speechSequence
+	minWords = conf["minWordsForLanguageChange"]
 	newSequence = []
 	shouldInterpret = True
+	# Track the most recent upstream LangChangeCommand. In always-interpret
+	# mode we strip these from the output, but we re-emit the last one before
+	# any below-threshold text so short tokens (single characters, symbol
+	# names like "Punkt") still come out in the document's intended language.
+	# Without this, character-by-character navigation through non-English
+	# text plays the localized symbol names in the default voice.
+	lastUpstreamLang = None
 	for i in speechSequence:
-		if  isinstance(i, LangChangeCommand) and config.conf["enhancedLanguageDetection"]["languageDetection"] == 0:
-			continue
 		if isinstance(i, LangChangeCommand):
+			lastUpstreamLang = i
+			if conf["languageDetection"] == 0:
+				# Always-interpret mode strips upstream language commands.
+				continue
 			shouldInterpret = not i.lang
 		if isinstance(i, str):
 			if shouldInterpret:
-				if config.conf["enhancedLanguageDetection"]["model"] == 0 and config.conf["enhancedLanguageDetection"]["detectMultipleLanguages"]:
-					tempSequence = detectMultipleLanguages(i)
-					newSequence.extend(tempSequence)
+				# Don't run detection on text below the word threshold — too short to identify reliably,
+				# and switching voice mid-utterance for one or two words causes audible artifacting.
+				if len(i.split()) < minWords:
+					if conf["languageDetection"] == 0 and lastUpstreamLang is not None:
+						# Restore the upstream language so localized symbol
+						# names play in the right voice during letter nav.
+						newSequence.append(lastUpstreamLang)
+					newSequence.append(i)
 					continue
-				else:
-					language = detectLanguage(i) if config.conf["enhancedLanguageDetection"]["model"] != 0 else detectLanguageWithLingua(i)
-					if isinstance(language, str):
-						language = language.lower()
-					languageCommand = LangChangeCommand(language)
-					newSequence.append(languageCommand)
+				if conf["model"] == 0 and conf["detectMultipleLanguages"]:
+					newSequence.extend(detectMultipleLanguages(i, minWords))
+					continue
+				language = detectLanguage(i) if conf["model"] != 0 else detectLanguageWithLingua(i)
+				if isinstance(language, str):
+					language = language.lower()
+				newSequence.append(LangChangeCommand(language))
 			else:
 				newSequence.append(i)
 				continue
-
 		newSequence.append(i)
-	return(newSequence)
+	return newSequence
+
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self, *args, **kwargs):
-		super(GlobalPlugin, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(EnhancedLanguageDetectionSettingsPanel)
 		updateDetector()
 		filter_speechSequence.register(speechSequenceFilter)
 		config.post_configProfileSwitch.register(updateDetector)
+
 	def terminate(self, *args, **kwargs):
 		config.post_configProfileSwitch.unregister(updateDetector)
 		filter_speechSequence.unregister(speechSequenceFilter)
-		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove
+		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(EnhancedLanguageDetectionSettingsPanel)
+		super().terminate(*args, **kwargs)
