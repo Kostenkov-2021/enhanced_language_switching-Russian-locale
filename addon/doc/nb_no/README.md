@@ -2,7 +2,7 @@
 
 * Forfatter: Emil-18
 * NVDA -kompatibilitet: 2024.2 og utover
-* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.3/enhancedLanguageDetection-1.2.3.nvda-addon).
+* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.4/enhancedLanguageDetection-1.2.4.nvda-addon).
 
 Dette tillegget  automatisk oppdager språket i teksten NVDA er i ferd med å si, og bruker NVDAs innebygde automatiske språk bytte hvis det er slått på, for å si teksten på det språket.
 
@@ -25,10 +25,18 @@ Det tillegget sluttet å fungere, og fra issues på GitHub, ser det ikke  ut som
         Selvforklarende.
 * Oppdag flere språk i samme tekst:
 	dette er en avkryssingsboks som lar deg spesifisere om tillegget skal prøve å oppdage flere språk i samme tekst bit som NVDA er i ferd med å si. For eksempel, hvis du leser et dokument linje for linje, og støter på en linje som inneholder to språk, vil den prøve å oppdage hvert språk separat.
+* Minimum antall ord trengt til og bytte språk.
+	Dette er et numerisk tekstfelt som lar deg bestemme hvor mange ord en tekst må inneholde før språkbytte funksjonene aktiveres. Hvis antallet ord er mindre en denne verdien, vil tillegget oppføre seg som om det er deaktivert
 * Språk for å tolke:
     Dette er en liste over språkene å tolke. Hvis tillegget tolker en tekst som et språk som ikke er valgt i denne listen, gjøres ingen automatisk språk bytte basert på tolkningen. Ingen språk er valgt som standard.
 
 ## forandrings log.
+### v1.2.4.
+
+Denne versjonen er laget av @heath-toby.
+
+* Lagt til kompatibilitet med NVDA 2026.1.
+* Lagt til en innstilling som lar deg spesifisere minimum antall ord som kreves for at tillegget skal aktiveres.
 
 ### v1.2.3
 * Fikset en feil som førte til at talen stoppet eller at NVDA spilte av feilmeldingslyder når ingen språk er valgt

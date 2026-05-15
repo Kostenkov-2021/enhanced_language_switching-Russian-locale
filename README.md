@@ -1,8 +1,8 @@
 # Enhanced Language Detection
 
 * Author: Emil-18
-* NVDA compatibility: 2024.2 and beyond
-* Download: [Stable version](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.2.3/enhancedLanguageDetection-1.2.3.nvda-addon).
+* NVDA compatibility: 2026.1
+* Download: [Stable version](https://github.com/Emil-18/enhanced_language_switching/releases/download/v1.2.4/enhancedLanguageDetection-1.2.4.nvda-addon).
 
 This add-on Automaticly detects the language of the text NVDA is about to speak, and uses NVDA's built in auto language switching, if turned on, to sspeak the text in that language.
 
@@ -25,10 +25,18 @@ That add-on stopped working, however, and from it's issues on GitHub, it doesn't
         Self explanatory.
 * Detect multiple languages in the same text:
 	this is a check box that allows you to specify if the add-on should try to detect multiple languages in the same text chunk that NVDA is about to speak. For example, if you are reading a document line by line, and encounter a line containing two languages, it will try to detect each language Separately.
+* Number of words required to switch language.
+	This is a numeric edit field that allows you to choose the minimum word count required to make the language detection activate. If the spoken text contains less words than this value, the add-on will behave as if it is disabled
 * Languages to interpret:
     This is a list of the languages to interpret. If the add-on interprets a text as a language that isn't selected in this list, no auto language switching is done based on the interpretation. No languages are selected by default.
 
 ## Change log.
+### v1.2.4.
+
+This version was made by @heath-toby.
+
+* Added compatibility with NVDA 2026.1.
+* Added a setting that allows you to specify the minimum amount of words required for the add-on to activate.
 
 ### v1.2.3
 
