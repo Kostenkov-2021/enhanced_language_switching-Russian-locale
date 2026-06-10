@@ -8,7 +8,6 @@ addonHandler.initTranslation()
 import os
 import sys
 
-<<<<<<< HEAD
 # Lingua can't be imported with relative import, because it requires submodules that I had to include manualy in the lingua folder
 # so add both the add-on folder as well as the underlying lingua folder, to os.path, import lingua, and remove them again
 addonPath = os.path.dirname(__file__)
