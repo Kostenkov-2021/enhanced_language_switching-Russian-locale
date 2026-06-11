@@ -2,7 +2,7 @@
 
 * Forfatter: Emil-18
 * NVDA -kompatibilitet: 2024.2 og utover
-* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.4/enhancedLanguageDetection-1.2.4.nvda-addon).
+* Last ned: [stabil versjon](https://github.com/emil-18/enhanced_language_switching/releases/download/v1.2.5/enhancedLanguageDetection-1.2.5.nvda-addon).
 
 Dette tillegget  automatisk oppdager språket i teksten NVDA er i ferd med å si, og bruker NVDAs innebygde automatiske språk bytte hvis det er slått på, for å si teksten på det språket.
 
